@@ -1,6 +1,7 @@
 # BasicBalatroInjector
 
 mod loader for balatro. patches the exe, no source edits. python 3.6+, stdlib only.
+also contains an optional modmenu and trainer in `mods/` 
 
 ## run it
 
