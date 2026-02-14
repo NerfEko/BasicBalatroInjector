@@ -1,25 +1,55 @@
-# Balatro Mod Injector
+# BasicBalatroInjector
 
-Standalone mod loader for Balatro. Injects the mod system into the game executable and syncs mods to the game directory—no game source edits required.
+mod loader for balatro. patches the exe, no source edits. python 3.6+, stdlib only.
 
-## Quick start
+## run it
 
+```bash
+python3 injector.py --game-dir /path/to/Balatro
+```
+
+linux steam:
 ```bash
 python3 injector.py --game-dir ~/.local/share/Steam/steamapps/common/Balatro
 ```
 
-Then launch Balatro through Steam. Options → Mods to manage mods.
+then launch the game. options → mods.
 
-## Contents
+## what it does
 
-| Path | Description |
-|------|-------------|
-| `injector.py` | Patches main.lua into Balatro.exe, syncs mods |
-| `main.lua` | Patched game entry point (injected into exe) |
-| `mods/` | Mod files (modlist.lua, trainer, docs) |
-| `mods/MODLIST_API.md` | Full API reference for mod creators |
-| `INJECTOR_README.md` | Detailed injector usage |
+1. copies `mods/` into the game folder
+2. patches `main.lua` into `Balatro.exe` (love2d fused exe = exe + zip, we swap the main.lua in the zip)
+3. backs up the exe as `Balatro.exe.bak` first
 
-## Mod development
+## undo
 
-Edit mods in `mods/`, then re-run the injector to sync. The game loads mods from its own `mods/` folder next to the exe.
+```bash
+cp Balatro.exe.bak Balatro.exe
+```
+
+or steam → right-click balatro → manage → verify integrity.
+
+## game updated?
+
+steam overwrites the exe. just run the injector again.
+
+## making mods
+
+put `.lua` files in `mods/`. `modlist.lua` is the loader (don't touch). everything else gets loaded. see `mods/MODLIST_API.md` for the api.
+
+## layout
+
+```
+  injector.py   — run this
+  main.lua      — gets injected
+  mods/
+    modlist.lua — loader + api
+    trainer.lua — example (cheats, T key in-game)
+    MODLIST_API.md
+```
+
+## options
+
+`--game-dir` — where Balatro.exe lives (required)
+`--main-lua` — path to main.lua (default: ./main.lua)
+`--exe` — exe name (default: Balatro.exe)
